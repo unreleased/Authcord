@@ -1,0 +1,9 @@
+<form action="/login" method="POST">
+  <h1>Login</h1>
+  <input type="text" name="email" placeholder="Email address" value="member@authcord.com" />
+  <input type="password" name="password" placeholder="Password" value="test" />
+  <input type="submit" value="Login" />
+  {{#if error }}
+    <p class="error">{{ error }}</p>
+  {{/if}}
+</form>

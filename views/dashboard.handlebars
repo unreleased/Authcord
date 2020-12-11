@@ -1,0 +1,29 @@
+<h1 class="title">Dashboard</h1>
+
+<form class="ip-wrappers" method="POST" action="/" >
+  <h2>Authenticated IPs</h2>
+  <p>These IPs will be given unlimited authentication. The device does not matter. The IP you are currently accessing this webpage from is: <strong>{{ ip }}</strong>. Having an IP authed means you will not have to authenticate the browser you are requesting on if you are using one of your listed IP addresses.</p>
+
+  <input type="text" name="ip_1" placeholder="IP Address 1" value="{{ ips.[0] }}" />
+  <input type="text" name="ip_2" placeholder="IP Address 2" value="{{ ips.[1] }}" />
+  <input type="hidden" name="type" value="ip_change" />
+  {{#if ip_error}}
+    <p class="error">{{ ip_error }}</p>
+  {{/if}}
+  <input type="submit" value="Save" />
+</form>
+
+<div class="session-wrappers">
+  <h2>Browser sessions</h2>
+  <p>You can authenticate a maximum of 5 browser sessions. For every new authentication afterwards the oldest session will be deleted.</p>
+  {{#each sessions }}
+    <div class="session">
+      <p><strong>{{ this.session_id}}</strong><br/>({{ this.user_agent }})</p>
+      <p>{{ this.created_at }}</p>
+    </div>
+  {{/each}}
+  
+</div>
+
+
+

@@ -1,0 +1,13 @@
+<h2>Redirecting. Please wait.</h2>
+
+<form id="form" action="{{ destination }}" method="POST">
+  {{#if data}}
+    {{#each data}}
+      <input type="hidden" name="{{{@key}}}" value="{{{this}}}">
+    {{/each}}
+  {{/if}}
+</form>
+
+<script>
+  document.getElementById("form").submit()
+</script>
