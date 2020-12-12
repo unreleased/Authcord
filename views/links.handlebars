@@ -1,0 +1,135 @@
+<h1>Link Creator</h1>
+<p>Here is an example of link creation using a GUI rather than an API request. We use this in Express so staff can create private GB links without needing development experience.</p>
+
+<form id="linkCreator">
+  <h3>Shortlink code</h3>
+  <input type="text" name="code" id="shortlinkCode" placeholder="Shortlink code (Optional)" />
+
+  <h3>Destination URL</h3>
+  <input type="text" name="destination" id="destination" placeholder="Destination URL" />
+
+  <h3>Method</h3>
+  <select name="method" id="method">
+    <option value="GET">GET</option>
+    <option value="POST">POST</option>
+  </select>
+
+  <div id="form-data-handler" style="display:none;">
+    <h3>Form data</h3>
+    <div id="formData" class="data-adder"></div>
+    <button id="add" type="button">+ Add</button>
+  </div>
+  
+
+  <h3>Link Obfuscation</h3>
+  <label>
+    <input type="checkbox" name="linkbust" value="RANDOM" />
+    <p>Randomise URL characters (Must contain %RAN% inside the URL)</p>
+  </label>
+  <label>
+    <input type="checkbox" name="linkbust" value="CACHEBUST" />
+    <p>Append random URL parameters</p>
+  </label>
+  <label>
+    <input type="checkbox" name="linkbust" value="CAPITALS" />
+    <p>Randomise URL capitalization</p>
+  </label>
+
+  <p id="success"></p>
+  <p id="error"></p>
+  
+  <button type="submit">Create shortlink!</button>
+</form>
+
+<script>
+  const form = document.getElementById("linkCreator")
+
+  document.getElementById("method").addEventListener("change", function(e) {
+    const handler = document.getElementById("form-data-handler")
+    if (e.target.value === 'GET') {
+      document.getElementById("formData").innerHTML = ''
+      handler.setAttribute('style', 'display:none;')
+    } else {
+      handler.setAttribute('style', 'display:block;')
+    }
+  })
+
+  document.getElementById("add").addEventListener("click", function(e) {
+    // All this complexity just to not empty form data :facepalm:
+
+    const formData = document.getElementById("formData")
+
+    const parent = document.createElement("div")
+    parent.setAttribute('class', 'add-data')
+
+    const keyInput = document.createElement("input")
+    keyInput.type = 'text'
+    keyInput.placeholder = 'Key'
+    keyInput.name = 'key'
+
+    const valueInput = document.createElement("input")
+    valueInput.type = 'text'
+    valueInput.placeholder = 'Value'
+    valueInput.name = 'value'
+
+    const button = document.createElement("button")
+    button.setAttribute('class', 'delete')
+    button.setAttribute('onClick', 'console.log(this.parentElement.remove())')
+    button.type = 'button'
+    button.innerText = 'Delete'
+
+    parent.append(keyInput)
+    parent.append(valueInput)
+    parent.append(button)
+
+    formData.append(parent)
+  })
+
+  form.addEventListener("submit", function(e) {
+    const shortlinkCode = document.getElementById("shortlinkCode").value || false
+    const destination = document.getElementById("destination").value
+    const method = document.getElementById("method").value
+    const dataKeys = document.querySelectorAll("[name=key]")
+    const dataValues = document.querySelectorAll("[name=value]")
+    const linkbusts = document.querySelectorAll("[name=linkbust]:checked")
+
+    const formData = {}
+    for (let i = 0; i < dataKeys.length; i++) {
+      const key = dataKeys[i].value
+      const value = dataValues[i].value
+      formData[key] = value
+    }
+
+    const linkbustList = []
+    for (let i = 0; i < linkbusts.length; i++) {
+      linkbustList.push(linkbusts[i].value)
+    }
+
+    fetch('/l', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json'
+      },
+      body: JSON.stringify({
+        code: shortlinkCode,
+        method: method,
+        data: Object.keys(formData).length !== 0 ? formData : false,
+        linkbust: linkbustList.length !== 0 ? linkbustList : false,
+        destination: destination,
+      })
+    }).then(async res => {
+      const json = await res.json()
+      if (res.status === 200) {
+        // Success
+        document.getElementById("error").innerHTML = ''
+        document.getElementById("success").innerHTML = `Link created! Test it here: <a target="_blank" href="/l/${json.code}">/l/${json.code}</a>`
+      } else {
+        document.getElementById("success").innerHTML = ''
+        document.getElementById("error").innerHTML = `Link not created: ${json.error}`
+      }
+    })
+
+    e.preventDefault()
+  })
+</script>

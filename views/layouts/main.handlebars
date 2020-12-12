@@ -25,7 +25,7 @@
       margin: 30px;
     }
 
-    input {
+    input, select {
       display: block;
       padding: 10px;
       margin-top: 15px;
@@ -35,8 +35,14 @@
       margin-top: 20px;
     }
 
-    .error {
+    .error, #error {
+      font-weight: bold;
       color: red;
+    }
+
+    #success {
+      font-weight: bold;
+      color: green;
     }
 
     .session {
@@ -45,6 +51,45 @@
     }
 
     .session:not(:first-child) {
+      margin-top: 20px;
+    }
+
+    #linkCreator {
+      margin-top: 50px;
+    }
+
+    h3 {
+      margin: 35px 0 10px 0;
+    }
+
+    #add {
+      margin-top: 20px;
+    }
+
+    .add-data {
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .add-data input:not(:first-child) {
+      margin-left: 25px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+    }
+
+    label input {
+      margin: 0;
+    }
+
+    label p {
+      margin: 0 0 0 10px;
+      user-select: none;
+    }
+
+    button[type=submit] {
       margin-top: 20px;
     }
 

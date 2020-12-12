@@ -1,5 +1,17 @@
 <h1 class="title">Dashboard</h1>
 
+<nav>
+  <a href="/links">Create shortlinks.</a>
+</nav>
+
+<div>
+  {{#if member}}
+    <p>You are a member</p>
+  {{else}}
+    <p>You are not a member</p>
+  {{/if}}
+</div>
+
 <form class="ip-wrappers" method="POST" action="/" >
   <h2>Authenticated IPs</h2>
   <p>These IPs will be given unlimited authentication. The device does not matter. The IP you are currently accessing this webpage from is: <strong>{{ ip }}</strong>. Having an IP authed means you will not have to authenticate the browser you are requesting on if you are using one of your listed IP addresses.</p>
@@ -18,7 +30,7 @@
   <p>You can authenticate a maximum of 5 browser sessions. For every new authentication afterwards the oldest session will be deleted.</p>
   {{#each sessions }}
     <div class="session">
-      <p><strong>{{ this.session_id}}</strong><br/>({{ this.user_agent }})</p>
+      <p><strong>{{ this.id}}</strong><br/>({{ this.user_agent }})</p>
       <p>{{ this.created_at }}</p>
     </div>
   {{/each}}
